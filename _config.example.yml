@@ -1,6 +1,6 @@
 # Header
 menu:
-  首页: /
+  首页: index.html
   前端: categories/front-end
   后端: back-end
   标签: javascript:;
