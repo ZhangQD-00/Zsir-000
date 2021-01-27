@@ -1,370 +1,160 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>Vue的增删改查</title>
-    <style type="text/css">
-        [v-cloak] {
-            display: none
-        }
-        table {
-            border: 1px solid #bcbcbc;
-            padding: 0;
-            border-collapse: collapse;
-            table-layout: fixed;
-            margin-top: 10px;
-            width: 100%;
-        }
-        table td,
-        table th {
-            height: 30px;
-            border: 1px solid #bcbcbc;
-            font-size: 15px;
-            padding: 3px 3px 3px 8px;
-        }
-        table th:first-child {
-            width: 30px;
-        }
-        .container,
-        .st {
-            width: 1000px;
-            margin: 10px auto 0;
-            font-size: 13px;
-            font-family: 'Microsoft YaHei'
-        }
-        .container .search {
-            font-size: 15px;
-            padding: 4px;
-        }
-        .container .add {
-            padding: 5px 15px;
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 6;
-            background: rgba(0, 0, 0, 0.7);
-        }
-        .overlay td:first-child {
-            width: 66px;
-        }
-        .overlay .con {
-            position: absolute;
-            width: 420px;
-            min-height: 300px;
-            background: #fff;
-            left: 50%;
-            top: 50%;
-            -webkit-transform: translate3d(-50%, -50%, 0);
-            transform: translate3d(-50%, -50%, 0);
-            /*margin-top: -150px;*/
-            padding: 20px;
-        }
-		td{
-			text-align: center;
-		}
-		th{
-			background: #42b983;
-		}
-		td a{
-			text-decoration: none;
-			color: black;
-		}
-		td a:hover{
-			text-decoration: none;
-			color: red;
-		}
-		tr:nth-of-type(odd){
-			background: #fff;
-		}
-		tr:nth-of-type(even){
-			background: #eee;
-		}
-		.add{
-			color: black;
-			border:1px solid #bcbcbc;
-			border-radius:calc(7%);
-			background: #eee;
-		}
-		.qvxiaobaocun{
-			text-align: center;
-		}
-    </style>
 </head>
 <body>
-    <div class="st">
-        <h1>用户管理系统</h1>
-    </div>
-    <div class="container" id="app">
-        <div>
-            <input type="text" placeholder="查询" @input="search" list="cars" class="search">
-            <datalist id="cars">
-                <option v-for="item in searchlist" :value="item"></option>
-            </datalist>
-            <input type="button" class="add" @click="add" value="新增">
-        </div>
-        <div>
-            <table>
-                <tr>
-                    <th>id</th>
-                    <th>用户名</th>
-                    <th>邮箱</th>
-                    <th>性别</th>
-                    <th>省份</th>
-                    <th>年龄</th>
-                    <th>操作</th>
-                </tr>
-                <tr v-cloak v-for="(item, index) of slist">
-                    <td>{{index+1}}</td>
-                    <td>{{item.username}}</td>
-                    <td>{{item.email}}</td>
-                    <td>{{item.sex}}</td>
-                    <td>{{item.province}}</td>
-                    <td>{{item.hobby}}</td>
-                    <td><a href="javascript:;" @click="showOverlay(index)">修改</a> | <a href="javascript:;" @click="del(index)">删除</a></td>
-                </tr>
-            </table>
-        </div>
-        <model :list='selectedlist' :isactive="isActive" v-cloak @change="changeOverlay" @modify="modify"></model>
-    </div>
-</body>
-<script type="text/javascript" src="js/vue.min.js"></script>
-<script type="text/javascript">
-    Vue.component('model', {
-        props: ['list', 'isactive'],
-        template: `<div class="overlay" v-show="isactive">
-                        <div class="con">
-                        <h2 class="title">新增 | 修改</h2>
-                        <div class="content">
-                        <table>
-                        <tr>
-                        <td>用户名</td>
-                        <td><input type="text" v-model="modifylist.username"></td>
-                        </tr>
-                        <tr>
-                        <td>邮箱</td>
-                        <td><input type="text" v-model="modifylist.email"></td>
-                        </tr>
-                        <tr>
-                        <td>性别</td>
-                        <td>
-                        <label><input type="radio" name="sex" value="男" v-model="modifylist.sex">男</label>
-                        <label><input type="radio" name="sex" value="女" v-model="modifylist.sex">女</label>
-                        <label><input type="radio" name="sex" value="未知" v-model="modifylist.sex">未知</label>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td>省份</td>
-                        <td>
-                        <select name="" id="" v-model="modifylist.province">
-                        <option value="北京市">北京市</option>
-						<option value="天津市">天津市</option>
-						<option value="上海市">上海市</option>
-						<option value="重庆市">重庆市</option>
-                        <option value="河北省">河北省</option>
-                        <option value="河南省">河南省</option>
-                        <option value="山西省">山西省</option>
-						<option value="山东省">山东省</option>
-                        <option value="广东省">广东省</option>
-						<option value="广西省">广西省</option>
-						<option value="湖北省">湖北省</option>
-						<option value="湖南省">湖南省</option>
-						<option value="吉林省">吉林省</option>
-						<option value="黑龙江省">黑龙江省</option>
-                        <option value="辽宁省">辽宁省</option>
-						<option value="海南省">海南省</option>
-						<option value="江苏省">江苏省</option>
-						<option value="浙江省">浙江省</option>
-						<option value="四川省">四川省</option>
-						<option value="贵州省">贵州省</option>
-						<option value="安徽省">安徽省</option>
-						<option value="福建省">福建省</option>
-						<option value="云南省">云南省</option>
-						<option value="陕西省">陕西省</option>
-						<option value="江西省">江西省</option>
-						<option value="甘肃省">甘肃省</option>
-						<option value="青岛省">青岛省</option>
-						<option value="台湾省">台湾省</option>
-						<option value="西藏省">西藏省</option>
-						<option value="宁夏省">宁夏省</option>
-						<option value="新疆省">新疆省</option>
-						<option value="香港">香港</option>
-						<option value="澳门">澳门</option>
-                        </select>
-                        </td>
-                        </tr>
-                       <tr>
-                       <td>年龄</td>
-                       <td><input type="text" v-model="modifylist.hobby"></td>
-                       </tr>
-                        </table>
-                        <p class="qvxiaobaocun">
-                        <input type="button" @click="modify" value="保存">
-						<input type="button" @click="changeActive" value="取消">
-                        </p>
-                        </div>
-                        </div>
-                    </div>`,
-        computed: {
-            modifylist() {
-                return this.list;
+
+    
+    <script type="text/javascript">
+    $(function () {
+  var cdom = document.createElement("canvas");
+  cdom.id = "myCanvas";
+  cdom.style.position = "fixed";
+  cdom.style.left = "0";
+  cdom.style.top = "0";
+  cdom.style.zIndex = -1;
+  document.body.appendChild(cdom);
+  var canvas = document.getElementById("myCanvas");
+  var context = canvas.getContext("2d");
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resizeCanvas, false);
+  resizeCanvas();
+  clearCanvas();
+  function clearCanvas() {
+    context.fillStyle = "#000000";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  function mouseDownHandler(e) {
+    var x = e.clientX;
+    var y = e.clientY;
+    fire(x, y);
+  }
+  var rid;
+  function fire(x, y) {
+    createFireworks(x, y);
+    function tick() {
+      context.globalCompositeOperation = "destination-out";
+      context.fillStyle = "rgba(0,0,0," + 10 / 100 + ")";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.globalCompositeOperation = "lighter";
+      drawFireworks();
+      rid = requestAnimationFrame(tick);
+    }
+    cancelAnimationFrame(rid);
+    tick();
+  }
+  var particles = [];
+  function createFireworks(sx, sy) {
+    particles = [];
+    var hue = Math.floor(Math.random() * 31) + 0;
+    var hueVariance = 30;
+    var count = 100;
+    for (var i = 0; i < count; i++) {
+      var p = {};
+      var angle = Math.floor(Math.random() * 360);
+      p.radians = (angle * Math.PI) / 180;
+      p.x = sx;
+      p.y = sy;
+      p.speed = Math.random() * 5 + 0.4;
+      p.radius = p.speed;
+      p.size = Math.floor(Math.random() * 3) + 1;
+      p.hue =
+        Math.floor(Math.random() * (hue + hueVariance - (hue - hueVariance))) +
+        (hue - hueVariance);
+      p.brightness = Math.floor(Math.random() * 31) + 50;
+      p.alpha = (Math.floor(Math.random() * 61) + 40) / 100;
+      particles.push(p);
+    }
+  }
+  function drawFireworks() {
+    clearCanvas();
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      var vx = Math.cos(p.radians) * p.radius;
+      var vy = Math.sin(p.radians) * p.radius + 0.4;
+      p.x += vx;
+      p.y += vy;
+      p.radius *= 1 - p.speed / 100;
+      p.alpha -= 0.005;
+      context.beginPath();
+      context.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+      context.closePath();
+      context.fillStyle =
+        "hsla(" + p.hue + ", 100%, " + p.brightness + "%, " + p.alpha + ")";
+      context.fill();
+    }
+  }
+  document.addEventListener("mousedown", mouseDownHandler, false);
+});
+
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
             }
-        },
-        methods: {
-            changeActive() {
-                this.$emit('change');
-            },
-            modify() {
-                this.$emit('modify', this.modifylist);
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
             }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle();
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp();
+            }, 3000);
         }
     });
-    var app = new Vue({
-        el: '#app',
-        data: {
-            isActive: false,
-            selected: -1,
-            selectedlist: {},
-            slist: [],
-            searchlist: [],
-            list: [
-                {
-                    username: '鬼泣',
-                    email: '123@qq.com',
-                    sex: '男',
-                    province: '北京市',
-                    hobby: '18'
-                },
-                {
-                    username: '狂战士',
-                    email: 'bbbbbbb@163.com',
-                    sex: '男',
-                    province: '河北省',
-                    hobby: '19'
-                },
-                {
-                    username: '驭剑士',
-                    email: 'abababab@qq.com',
-                    sex: '女',
-                    province: '重庆市',
-                    hobby: '20'
-                },
-                {
-                    username: '阿修罗',
-                    email: '123@qq.com',
-                    sex: '男',
-                    province: '北京市',
-                    hobby: '21'
-                },
-                {
-                    username: '剑魂',
-                    email: 'bbbbbbb@163.com',
-                    sex: '男',
-                    province: '河北省',
-                    hobby: '22'
-                },
-                {
-                    username: '剑影',
-                    email: 'abababab@qq.com',
-                    sex: '男',
-                    province: '重庆市',
-                    hobby: '22'
-                }
-            ]
-        },
-        created() {
-            console.log(Date.now());
-            this.setSlist(this.list);
-        },
-        methods: {
-            // 修改数据
-            showOverlay(index) {
-                this.selected = index;
-                this.selectedlist = this.list[index];
-                this.changeOverlay();
-            },
-            // 点击保存按钮
-            modify(arr) {
-                if (this.selected > -1) {
-                    Vue.set(this.list, this.selected, arr);
-                } else {
-                    this.list.push(arr);
-                }
-                this.setSlist(this.list);
-                this.changeOverlay();
-            },
-            add: function () {
-                this.selectedlist = {
-                    username: '',
-                    email: '',
-                    sex: '男',
-                    province: '北京市',
-                    hobby: ''
-                };
-                this.isActive = true;
-            },
-            // delete list in index location
-            del(index) {
-				if(confirm("确定删除当前员工信息吗？")) {
-					this.list.splice(index, 1);
-					this.setSlist(this.list);
-				}
-            },
-            changeOverlay() {
-                this.isActive = !this.isActive;
-            },
-            // 获取需要渲染到页面中的数据
-            setSlist(arr) {
-                this.slist = JSON.parse(JSON.stringify(arr));
-            },
-            // 搜索
-            search(e) {
-                var v = e.target.value,
-                    self = this;
-                self.searchlist = [];
-                if (v) {
-                    var ss = [];
-                    // 过滤需要的数据
-                    this.list.forEach(function (item) {
-                        if (item.username.indexOf(v) > -1) {
-                            if (self.searchlist.indexOf(item.username) == -1) {
-                                self.searchlist.push(item.username);
-                            }
-                            ss.push(item);
-                        } else if (item.email.indexOf(v) > -1) {
-                            if (self.searchlist.indexOf(item.email) == -1) {
-                                self.searchlist.push(item.email);
-                            }
-                            ss.push(item);
-                        }else if (item.sex.indexOf(v) > -1) {
-                            if (self.searchlist.indexOf(item.sex) == -1) {
-                                self.searchlist.push(item.sex);
-                            }
-                            ss.push(item);
-                        }else if (item.province.indexOf(v) > -1) {
-                            if (self.searchlist.indexOf(item.province) == -1) {
-                                self.searchlist.push(item.province);
-                            }
-                            ss.push(item);
-                        }else if (item.hobby.indexOf(v) > -1) {
-                            if (self.searchlist.indexOf(item.hobby) == -1) {
-                                self.searchlist.push(item.hobby);
-                            }
-                            ss.push(item);
-                        }
-						
-                    });
-                    this.setSlist(ss); // 将过滤后的数据给了slist
-                } else {
-                    // 没有搜索内容，则展示全部数据
-                    this.setSlist(this.list);
-                }
+    </script>
+    
+        <script src="/js/scrollspy.min.js"></script>
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
             }
-        }
-    })
-</script>
+        }).trigger('resize');
+        </script>
+    
+
+</body>
 </html>
