@@ -1,206 +1,370 @@
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.9.0">
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-
-    
-
-    
-
-    <title>Z-sir的Blog</title>
-    <meta name="author" content="ZhangQD">
-    <meta name="keywords" content>
-    <meta name="description" content>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-
-    
-    
-    <link rel="icon" href="/images/favicon.ico">
-    
-
+    <title>Vue的增删改查</title>
     <style type="text/css">
-    @font-face {
-        font-family: 'icomoon';
-        src: url("/fonts/icomoon.eot?q628ml");
-        src: url("/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
-             url("/fonts/icomoon.ttf?q628ml") format('truetype'),
-             url("/fonts/icomoon.woff?q628ml") format('woff'),
-             url("/fonts/icomoon.svg?q628ml#icomoon") format('svg');
-        font-weight: normal;
-        font-style: normal;
-    }
+        [v-cloak] {
+            display: none
+        }
+        table {
+            border: 1px solid #bcbcbc;
+            padding: 0;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 10px;
+            width: 100%;
+        }
+        table td,
+        table th {
+            height: 30px;
+            border: 1px solid #bcbcbc;
+            font-size: 15px;
+            padding: 3px 3px 3px 8px;
+        }
+        table th:first-child {
+            width: 30px;
+        }
+        .container,
+        .st {
+            width: 1000px;
+            margin: 10px auto 0;
+            font-size: 13px;
+            font-family: 'Microsoft YaHei'
+        }
+        .container .search {
+            font-size: 15px;
+            padding: 4px;
+        }
+        .container .add {
+            padding: 5px 15px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .overlay td:first-child {
+            width: 66px;
+        }
+        .overlay .con {
+            position: absolute;
+            width: 420px;
+            min-height: 300px;
+            background: #fff;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate3d(-50%, -50%, 0);
+            transform: translate3d(-50%, -50%, 0);
+            /*margin-top: -150px;*/
+            padding: 20px;
+        }
+		td{
+			text-align: center;
+		}
+		th{
+			background: #42b983;
+		}
+		td a{
+			text-decoration: none;
+			color: black;
+		}
+		td a:hover{
+			text-decoration: none;
+			color: red;
+		}
+		tr:nth-of-type(odd){
+			background: #fff;
+		}
+		tr:nth-of-type(even){
+			background: #eee;
+		}
+		.add{
+			color: black;
+			border:1px solid #bcbcbc;
+			border-radius:calc(7%);
+			background: #eee;
+		}
+		.qvxiaobaocun{
+			text-align: center;
+		}
     </style>
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!--[if lt IE 9]>
-    <style type="text/css">
-    .nav-inner {top:0;}
-    .author-meta {position:static;top:0;}
-    .search-form {height:36px;}
-    </style>
-    <script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-    <![endif]-->
 </head>
 <body>
-
-    <main class="app">
-        <header id="header" class="header clearfix">
-    <div id="nav" class="nav">
-    <div class="nav-mobile">
-        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
-        <h1 class="nav-mobile-title nav-mobile-item">Z-sir的Blog</h1>
-        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    <div class="st">
+        <h1>用户管理系统</h1>
     </div>
-
-    <nav id="nav-inner" class="nav-inner">
-        
-            <a class="nav-item active" href="/">
-                <span class="nav-text">首页</span>
-            </a>
-        
-            <a class="nav-item" href="/tags">
-                <span class="nav-text">标签</span>
-            </a>
-        
-            <a class="nav-item" href="/archives">
-                <span class="nav-text">归档</span>
-            </a>
-        
-            <a class="nav-item" href="/about">
-                <span class="nav-text">关于</span>
-            </a>
-        
-    </nav>
-</div>
-
-    <aside id="aside" class="aside">
-    <div id="aside-mask" class="aside-mask"></div>
-    <div id="aside-inner" class="aside-inner">
-        <!-- <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://zhanghenggetup.github.io"></form> -->
-
-        
-        
-
-        
-        <div class="author-meta">
-            
-            <div class="author-avatar">
-                <a href="/">
-                    <img src="/images/avatar.jpg" title="ZhangQD">
-                </a>
-            </div>
-            
-            <div class="author-name">ZhangQD</div>
-            <div class="author-work">Java开发</div>
-            <div class="author-location">
-                <i class="icon-location vm"></i>
-                <span class="vm">shandong, China</span>
-            </div>
-            
-            <div class="author-thread-wrap">
-                <div class="author-threads clearfix">
-                    
-                    <a class="thread-item" href="https://github.com/ZhangQD-00/zhangqd" target="_blank" rel="noopener">
-                        <!-- Generated by IcoMoon.io -->
-<svg viewbox="0 0 1024 1024" width="38" height="38" fill="currentColor">
-<path d="M512 32.12c-265.004 0-479.88 220.23-479.88 492.090 0 217.446 137.536 401.684 328.202 466.81 23.994 4.498 32.778-10.712 32.778-23.78 0-11.782-0.428-42.632-0.642-83.764-133.466 29.778-161.744-65.984-161.744-65.984-21.852-56.772-53.344-71.982-53.344-71.982-43.49-30.636 3.214-29.992 3.214-29.992 48.202 3.428 73.482 50.772 73.482 50.772 42.846 75.196 112.258 53.558 139.68 40.918 4.284-31.706 16.71-53.558 30.42-65.77-106.474-12.426-218.516-54.63-218.516-243.152 0-53.772 18.638-97.69 49.274-131.966-4.928-12.426-21.424-62.556 4.714-130.252 0 0 40.276-13.282 131.966 50.344 38.348-10.926 79.266-16.282 120.184-16.496 40.704 0.214 81.836 5.57 120.184 16.496 91.692-63.626 131.752-50.344 131.752-50.344 26.136 67.698 9.64 117.828 4.714 130.252 30.636 34.492 49.274 78.408 49.274 131.966 0 188.952-112.258 230.514-219.16 242.724 17.138 15.21 32.564 45.202 32.564 91.048 0 65.77-0.642 118.898-0.642 134.966 0 13.068 8.57 28.492 32.992 23.566 191.094-64.912 328.418-249.152 328.418-466.382 0-271.86-214.874-492.090-479.88-492.090z"/>
-</svg>
-
-                    </a>
-                    
-                </div>
-            </div>
-            
+    <div class="container" id="app">
+        <div>
+            <input type="text" placeholder="查询" @input="search" list="cars" class="search">
+            <datalist id="cars">
+                <option v-for="item in searchlist" :value="item"></option>
+            </datalist>
+            <input type="button" class="add" @click="add" value="新增">
         </div>
-        
+        <div>
+            <table>
+                <tr>
+                    <th>id</th>
+                    <th>用户名</th>
+                    <th>邮箱</th>
+                    <th>性别</th>
+                    <th>省份</th>
+                    <th>年龄</th>
+                    <th>操作</th>
+                </tr>
+                <tr v-cloak v-for="(item, index) of slist">
+                    <td>{{index+1}}</td>
+                    <td>{{item.username}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.sex}}</td>
+                    <td>{{item.province}}</td>
+                    <td>{{item.hobby}}</td>
+                    <td><a href="javascript:;" @click="showOverlay(index)">修改</a> | <a href="javascript:;" @click="del(index)">删除</a></td>
+                </tr>
+            </table>
+        </div>
+        <model :list='selectedlist' :isactive="isActive" v-cloak @change="changeOverlay" @modify="modify"></model>
     </div>
-</aside>
-</header>
-
-        <div id="content" class="content">
-            <div id="wrapper" class="wrapper" style="max-width: 800px">
-                
-    <article class="article" itemscope itemprop="blogPost">
-    
-    <header class="article-header">
-        
-        <h1 itemprop="name">
-            <a href="aaa">哈罗</a>
-        </h1>
-
-    </header>
-    <section class="article-body markdown-body"></section>
-</article>
-
-<nav class="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-</nav>
-
-
-
-            </div>
-        </div>
-        <footer class="footer">
-    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
-
-    
-    <script>
-        var _hmt = _hmt || [];
-        (function () {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?e4027971a230b210f4671f485b33846a";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
-    
-</footer>
-
-    </main>
-
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.0/jquery.min.js"></script>
-    <script type="text/javascript">
-    $(function() {
-        var nodes = {
-            nav: $('#nav'),
-            aside: $('#aside'),
-            asideInner: $('#aside-inner'),
-            navInner: $('#nav-inner')
-        };
-
-        var doing = false;
-        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
-            if (nodes.aside.hasClass('mobile-open')) {
-                nodes.aside.removeClass('mobile-open');
-            } else {
-                nodes.aside.removeClass('mobile-close panel-show');
+</body>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript">
+    Vue.component('model', {
+        props: ['list', 'isactive'],
+        template: `<div class="overlay" v-show="isactive">
+                        <div class="con">
+                        <h2 class="title">新增 | 修改</h2>
+                        <div class="content">
+                        <table>
+                        <tr>
+                        <td>用户名</td>
+                        <td><input type="text" v-model="modifylist.username"></td>
+                        </tr>
+                        <tr>
+                        <td>邮箱</td>
+                        <td><input type="text" v-model="modifylist.email"></td>
+                        </tr>
+                        <tr>
+                        <td>性别</td>
+                        <td>
+                        <label><input type="radio" name="sex" value="男" v-model="modifylist.sex">男</label>
+                        <label><input type="radio" name="sex" value="女" v-model="modifylist.sex">女</label>
+                        <label><input type="radio" name="sex" value="未知" v-model="modifylist.sex">未知</label>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>省份</td>
+                        <td>
+                        <select name="" id="" v-model="modifylist.province">
+                        <option value="北京市">北京市</option>
+						<option value="天津市">天津市</option>
+						<option value="上海市">上海市</option>
+						<option value="重庆市">重庆市</option>
+                        <option value="河北省">河北省</option>
+                        <option value="河南省">河南省</option>
+                        <option value="山西省">山西省</option>
+						<option value="山东省">山东省</option>
+                        <option value="广东省">广东省</option>
+						<option value="广西省">广西省</option>
+						<option value="湖北省">湖北省</option>
+						<option value="湖南省">湖南省</option>
+						<option value="吉林省">吉林省</option>
+						<option value="黑龙江省">黑龙江省</option>
+                        <option value="辽宁省">辽宁省</option>
+						<option value="海南省">海南省</option>
+						<option value="江苏省">江苏省</option>
+						<option value="浙江省">浙江省</option>
+						<option value="四川省">四川省</option>
+						<option value="贵州省">贵州省</option>
+						<option value="安徽省">安徽省</option>
+						<option value="福建省">福建省</option>
+						<option value="云南省">云南省</option>
+						<option value="陕西省">陕西省</option>
+						<option value="江西省">江西省</option>
+						<option value="甘肃省">甘肃省</option>
+						<option value="青岛省">青岛省</option>
+						<option value="台湾省">台湾省</option>
+						<option value="西藏省">西藏省</option>
+						<option value="宁夏省">宁夏省</option>
+						<option value="新疆省">新疆省</option>
+						<option value="香港">香港</option>
+						<option value="澳门">澳门</option>
+                        </select>
+                        </td>
+                        </tr>
+                       <tr>
+                       <td>年龄</td>
+                       <td><input type="text" v-model="modifylist.hobby"></td>
+                       </tr>
+                        </table>
+                        <p class="qvxiaobaocun">
+                        <input type="button" @click="modify" value="保存">
+						<input type="button" @click="changeActive" value="取消">
+                        </p>
+                        </div>
+                        </div>
+                    </div>`,
+        computed: {
+            modifylist() {
+                return this.list;
             }
-            doing = false;
-        });
-        $('#open-panel, #aside-mask').on('click', function() {
-            if (doing) {
-                return;
+        },
+        methods: {
+            changeActive() {
+                this.$emit('change');
+            },
+            modify() {
+                this.$emit('modify', this.modifylist);
             }
-
-            if (nodes.aside.hasClass('panel-show')) {
-                nodes.aside.addClass('mobile-close');
-            } else {
-                nodes.aside.addClass('mobile-open panel-show');
-            }
-        });
-        $('#open-menus').on('click', function() {
-            nodes.navInner.slideToggle();
-        });
-
-        if (window.innerWidth <= 960) {
-            setTimeout(function() {
-                nodes.navInner.slideUp();
-            }, 3000);
         }
     });
-    </script>
-    
-
-</body>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isActive: false,
+            selected: -1,
+            selectedlist: {},
+            slist: [],
+            searchlist: [],
+            list: [
+                {
+                    username: '鬼泣',
+                    email: '123@qq.com',
+                    sex: '男',
+                    province: '北京市',
+                    hobby: '18'
+                },
+                {
+                    username: '狂战士',
+                    email: 'bbbbbbb@163.com',
+                    sex: '男',
+                    province: '河北省',
+                    hobby: '19'
+                },
+                {
+                    username: '驭剑士',
+                    email: 'abababab@qq.com',
+                    sex: '女',
+                    province: '重庆市',
+                    hobby: '20'
+                },
+                {
+                    username: '阿修罗',
+                    email: '123@qq.com',
+                    sex: '男',
+                    province: '北京市',
+                    hobby: '21'
+                },
+                {
+                    username: '剑魂',
+                    email: 'bbbbbbb@163.com',
+                    sex: '男',
+                    province: '河北省',
+                    hobby: '22'
+                },
+                {
+                    username: '剑影',
+                    email: 'abababab@qq.com',
+                    sex: '男',
+                    province: '重庆市',
+                    hobby: '22'
+                }
+            ]
+        },
+        created() {
+            console.log(Date.now());
+            this.setSlist(this.list);
+        },
+        methods: {
+            // 修改数据
+            showOverlay(index) {
+                this.selected = index;
+                this.selectedlist = this.list[index];
+                this.changeOverlay();
+            },
+            // 点击保存按钮
+            modify(arr) {
+                if (this.selected > -1) {
+                    Vue.set(this.list, this.selected, arr);
+                } else {
+                    this.list.push(arr);
+                }
+                this.setSlist(this.list);
+                this.changeOverlay();
+            },
+            add: function () {
+                this.selectedlist = {
+                    username: '',
+                    email: '',
+                    sex: '男',
+                    province: '北京市',
+                    hobby: ''
+                };
+                this.isActive = true;
+            },
+            // delete list in index location
+            del(index) {
+				if(confirm("确定删除当前员工信息吗？")) {
+					this.list.splice(index, 1);
+					this.setSlist(this.list);
+				}
+            },
+            changeOverlay() {
+                this.isActive = !this.isActive;
+            },
+            // 获取需要渲染到页面中的数据
+            setSlist(arr) {
+                this.slist = JSON.parse(JSON.stringify(arr));
+            },
+            // 搜索
+            search(e) {
+                var v = e.target.value,
+                    self = this;
+                self.searchlist = [];
+                if (v) {
+                    var ss = [];
+                    // 过滤需要的数据
+                    this.list.forEach(function (item) {
+                        if (item.username.indexOf(v) > -1) {
+                            if (self.searchlist.indexOf(item.username) == -1) {
+                                self.searchlist.push(item.username);
+                            }
+                            ss.push(item);
+                        } else if (item.email.indexOf(v) > -1) {
+                            if (self.searchlist.indexOf(item.email) == -1) {
+                                self.searchlist.push(item.email);
+                            }
+                            ss.push(item);
+                        }else if (item.sex.indexOf(v) > -1) {
+                            if (self.searchlist.indexOf(item.sex) == -1) {
+                                self.searchlist.push(item.sex);
+                            }
+                            ss.push(item);
+                        }else if (item.province.indexOf(v) > -1) {
+                            if (self.searchlist.indexOf(item.province) == -1) {
+                                self.searchlist.push(item.province);
+                            }
+                            ss.push(item);
+                        }else if (item.hobby.indexOf(v) > -1) {
+                            if (self.searchlist.indexOf(item.hobby) == -1) {
+                                self.searchlist.push(item.hobby);
+                            }
+                            ss.push(item);
+                        }
+						
+                    });
+                    this.setSlist(ss); // 将过滤后的数据给了slist
+                } else {
+                    // 没有搜索内容，则展示全部数据
+                    this.setSlist(this.list);
+                }
+            }
+        }
+    })
+</script>
 </html>
